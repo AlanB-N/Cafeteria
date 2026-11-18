@@ -1,12 +1,17 @@
 ﻿<?php
-session_name("tienda");
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name("cafeteria_session");
+    session_start();
+}
+$_SESSION = array();
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
 session_destroy();
-unset($_SESSION["user_id"]);
-unset($_SESSION["user_name"]);
-unset($_SESSION["nombre_usuario"]);
-unset($_SESSION["nivel"]);
-unset($_SESSION["nivelTitulo"]);
-header("Location:../index.php");
+header("Location: ../index.php");
+exit;
 ?>
-
